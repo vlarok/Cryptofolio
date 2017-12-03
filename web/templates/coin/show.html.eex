@@ -1,0 +1,23 @@
+<h2>Show coin</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @coin.name %>
+  </li>
+
+  <li>
+    <strong>Total:</strong>
+    <%= @coin.total %>
+  </li>
+
+  <li>
+    <strong>Value:</strong>
+    <%= @coin.value %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: coin_path(@conn, :edit, @coin) %></span>
+<span><%= link "Back", to: coin_path(@conn, :index) %></span>

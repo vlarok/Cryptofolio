@@ -1,0 +1,6 @@
+<h2>Edit coin</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: coin_path(@conn, :update, @coin) %>
+
+<span><%= link "Back", to: coin_path(@conn, :index) %></span>
