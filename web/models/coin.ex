@@ -3,8 +3,12 @@ defmodule Cryptofolio.Coin do
 
   schema "coins" do
     field :name, :string
+    field :node, :integer
     field :total, :integer
     field :value, :integer
+    field :earned, :integer
+    field :invested, :integer
+    field :all, :integer
 
     timestamps()
   end
@@ -14,7 +18,7 @@ defmodule Cryptofolio.Coin do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :total, :value])
-    |> validate_required([:name, :total, :value])
+    |> cast(params, [:name, :node, :total, :value, :earned, :invested, :all])
+    |> validate_required([:name, :node, :total, :value])
   end
 end

@@ -5,43 +5,70 @@ defmodule Cryptofolio.CoinController do
 
   def index(conn, _params) do
     coins = Repo.all(Coin)
-    Enum.each(coins, fn (coin) -> 
-      case HTTPoison.get("https://api.coinmarketcap.com/v1/ticker/#{coin.name}/?convert=EUR") do
-        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-          price = body
-                    |> Poison.decode!
-                    #|> Enum.map(fn (x) -> x["price_eur"] end)
-          # [x|_] = price
 
-          #  = x
-          [x] = price
-         # %{price_eur: price_eur} = x
-         calculated = String.to_float(x["price_eur"]) * coin.total
-
-         new = Map.put(coin, :value, calculated)
-         IO.inspect(new)
-
-         changeset = Coin.changeset(coin, %{value: round(calculated)})
-         Repo.update(changeset)
-
-
-        {:ok, %HTTPoison.Response{status_code: 404}} ->
-          IO.puts "Not found :("
-        {:error, %HTTPoison.Error{reason: reason}} ->
-          IO.inspect reason
-      end
-      # {:ok, response} = HTTPoison.get "https://api.coinmarketcap.com/v1/ticker/#{coin.name}/?convert=EUR"
-      # IO.inspect(response) 
+    # coins_to_show = Enum.map(coins, fn(coin = %Coin{value: value}) -> %Coin{coin | value: value / 1000} end)
     
-    end)
-   
-   
-    
-    
-    revenue = Repo.one(from p in Coin, select: sum(p.value))
-      |>IO.inspect
+    coins_to_show = Enum.map(coins, fn(coin = %Coin{name: name, total: total, node: node}) -> 
+      %Coin{coin | value: price(name), earned: round(price(name) * total),  all: round(price(name) * (total + node))} end)
+    # revenue = Repo.one(from p in Coin, select: sum(p.value))
+    #   |>IO.inspect
 
-    render(conn, "index.html", coins: coins, revenue: revenue)
+    # nodeworth = Repo.one(from p in Coin, select: sum(p.node))
+    #   |>IO.inspect
+
+    # sum = coins_to_show
+    #       |> Enum.map(fn(coin = %Coin{all: all}) -> all end)
+    #       |> Enum.sum
+          
+    sum = Enum.reduce(coins_to_show, 0, fn(%Coin{all: all}, acc) ->
+            acc + all
+          end)
+
+    sum_earned = Enum.reduce(coins_to_show, 0, fn(%Coin{earned: earned}, acc) ->
+            acc + earned
+          end)
+
+
+    render(conn, "index.html", coins: coins_to_show, sum_earned: sum_earned ,sum: sum)
+  end
+
+  defp price1(coin) do
+    case HTTPoison.get("https://api.coinmarketcap.com/v1/ticker/#{coin.name}/?convert=EUR") do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        price = body
+                  |> Poison.decode!
+                  #|> Enum.map(fn (x) -> x["price_eur"] end)
+        # [x|_] = price
+
+        #  = x
+        [x] = price
+       # %{price_eur: price_eur} = x
+       calculated = String.to_float(x["price_eur"]) * 1000
+
+       new = Map.put(coin, :value, calculated)
+       IO.inspect(new)
+
+       changeset = Coin.changeset(coin, %{value: round(calculated)})
+       Repo.update(changeset)
+
+
+      {:ok, %HTTPoison.Response{status_code: 404}} ->
+        IO.puts "Not found :("
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        IO.inspect reason
+    end
+  end
+
+  defp price(name) do
+    case HTTPoison.get("https://api.coinmarketcap.com/v1/ticker/#{name}/?convert=EUR") do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        price = body
+                  |> Poison.decode!
+        [x] = price
+        
+        String.to_float(x["price_eur"])
+
+    end
   end
 
   def new(conn, _params) do

@@ -12,6 +12,12 @@
   </div>
 
   <div class="form-group">
+    <%= label f, :node, class: "control-label" %>
+    <%= number_input f, :node, class: "form-control" %>
+    <%= error_tag f, :node %>
+  </div>
+
+  <div class="form-group">
     <%= label f, :total, class: "control-label" %>
     <%= number_input f, :total, class: "form-control" %>
     <%= error_tag f, :total %>

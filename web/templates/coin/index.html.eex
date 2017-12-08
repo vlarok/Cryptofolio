@@ -4,9 +4,11 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Total</th>
-      <th>Value</th>
-
+      <th>Price</th>
+      <th>Node</th>
+      <th>Earned</th>
+      <th>Eur Earned</th>
+      <th>Eur Total</th>
       <th></th>
     </tr>
   </thead>
@@ -14,9 +16,11 @@
 <%= for coin <- @coins do %>
     <tr>
       <td><%= coin.name %></td>
-      <td><%= coin.total %></td>
       <td><%= coin.value %></td>
-
+      <td><%= coin.node %></td>
+      <td><%= coin.total %></td>
+      <td><%= coin.earned%></td>
+      <td><%= coin.all %></td>
       <td class="text-right">
         <span><%= link "Show", to: coin_path(@conn, :show, coin), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Edit", to: coin_path(@conn, :edit, coin), class: "btn btn-default btn-xs" %></span>
@@ -27,7 +31,12 @@
       <tr>
       <td></td>
       <td></td>
-      <td><%= @revenue %></td>
+       <td></td>
+       <td></td>
+       <td> <%= @sum_earned %> </td>
+      <td>
+       <%= @sum %> 
+      </td>
 
       <td class="text-right">
       </td>
