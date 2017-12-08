@@ -32,32 +32,32 @@ defmodule Cryptofolio.CoinController do
     render(conn, "index.html", coins: coins_to_show, sum_earned: sum_earned ,sum: sum)
   end
 
-  defp price1(coin) do
-    case HTTPoison.get("https://api.coinmarketcap.com/v1/ticker/#{coin.name}/?convert=EUR") do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        price = body
-                  |> Poison.decode!
-                  #|> Enum.map(fn (x) -> x["price_eur"] end)
-        # [x|_] = price
+  # defp price1(coin) do
+  #   case HTTPoison.get("https://api.coinmarketcap.com/v1/ticker/#{coin.name}/?convert=EUR") do
+  #     {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+  #       price = body
+  #                 |> Poison.decode!
+  #                 #|> Enum.map(fn (x) -> x["price_eur"] end)
+  #       # [x|_] = price
 
-        #  = x
-        [x] = price
-       # %{price_eur: price_eur} = x
-       calculated = String.to_float(x["price_eur"]) * 1000
+  #       #  = x
+  #       [x] = price
+  #      # %{price_eur: price_eur} = x
+  #      calculated = String.to_float(x["price_eur"]) * 1000
 
-       new = Map.put(coin, :value, calculated)
-       IO.inspect(new)
+  #      new = Map.put(coin, :value, calculated)
+  #      IO.inspect(new)
 
-       changeset = Coin.changeset(coin, %{value: round(calculated)})
-       Repo.update(changeset)
+  #      changeset = Coin.changeset(coin, %{value: round(calculated)})
+  #      Repo.update(changeset)
 
 
-      {:ok, %HTTPoison.Response{status_code: 404}} ->
-        IO.puts "Not found :("
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        IO.inspect reason
-    end
-  end
+  #     {:ok, %HTTPoison.Response{status_code: 404}} ->
+  #       IO.puts "Not found :("
+  #     {:error, %HTTPoison.Error{reason: reason}} ->
+  #       IO.inspect reason
+  #   end
+  # end
 
   defp price(name) do
     case HTTPoison.get("https://api.coinmarketcap.com/v1/ticker/#{name}/?convert=EUR") do
