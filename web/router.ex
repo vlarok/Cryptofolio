@@ -16,7 +16,7 @@ defmodule Cryptofolio.Router do
   scope "/", Cryptofolio do
     pipe_through :browser # Use the default browser stack
     resources "/coins", CoinController
-    get "/", PageController, :index
+    get "/", CoinController, :index
   end
 
   # Other scopes may use custom stacks.

@@ -9,7 +9,7 @@ defmodule Cryptofolio.CoinController do
     # coins_to_show = Enum.map(coins, fn(coin = %Coin{value: value}) -> %Coin{coin | value: value / 1000} end)
     
     coins_to_show = Enum.map(coins, fn(coin = %Coin{name: name, total: total, node: node}) -> 
-      %Coin{coin | value: price(name), earned: round(price(name) * total),  all: round(price(name) * (total + node))} end)
+      %Coin{coin | value: price(name),node: node / 1000, earned: round(price(name) * total),  all: round(price(name) * (total + node / 1000))} end)
     # revenue = Repo.one(from p in Coin, select: sum(p.value))
     #   |>IO.inspect
 
@@ -27,9 +27,10 @@ defmodule Cryptofolio.CoinController do
     sum_earned = Enum.reduce(coins_to_show, 0, fn(%Coin{earned: earned}, acc) ->
             acc + earned
           end)
+    net = sum + sum_earned
 
 
-    render(conn, "index.html", coins: coins_to_show, sum_earned: sum_earned ,sum: sum)
+    render(conn, "index.html", coins: coins_to_show, sum_earned: sum_earned ,sum: sum, net: net)
   end
 
   # defp price1(coin) do

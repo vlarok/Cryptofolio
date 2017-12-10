@@ -3,12 +3,12 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Name</th>
+      <th>Coin</th>
       <th>Price</th>
-      <th>Node</th>
-      <th>Earned</th>
-      <th>Eur Earned</th>
-      <th>Eur Total</th>
+      <th>Node coins</th>
+      <th>Mined coins</th>
+      <th>Node return</th>
+      <th>Node worth</th>
       <th></th>
     </tr>
   </thead>
@@ -22,9 +22,7 @@
       <td><%= coin.earned%></td>
       <td><%= coin.all %></td>
       <td class="text-right">
-        <span><%= link "Show", to: coin_path(@conn, :show, coin), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Edit", to: coin_path(@conn, :edit, coin), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Delete", to: coin_path(@conn, :delete, coin), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
       </td>
     </tr>
 <% end %>
@@ -33,12 +31,13 @@
       <td></td>
        <td></td>
        <td></td>
-       <td> <%= @sum_earned %> </td>
+       <td>EUR: <%= @sum_earned %> </td>
       <td>
-       <%= @sum %> 
+      EUR: <%= @sum %> 
       </td>
 
       <td class="text-right">
+       EUR: <%= @net %> 
       </td>
     </tr>
   </tbody>
